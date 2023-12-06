@@ -1,16 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import userRouter from "./routes/user.route.js";
 dotenv.config();
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("This is the home ");
-});
-
-app.get("/about", (req, res) => {
-  res.send("This is the about page");
-});
+app.use("/api/user", userRouter);
 
 mongoose
   .connect(process.env.MONGO)
