@@ -6,10 +6,21 @@ import authRouter from "./routes/auth.route.js";
 
 dotenv.config();
 const app = express();
-app.use(express.json());
+app.use(express.json()); //  req. k body se directly data nai fetch kr skte to isiliye middleware lagana padta hai
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+
+//  middleware for handling the errors
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "internal server error";
+  return res.json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
 
 mongoose
   .connect(process.env.MONGO)

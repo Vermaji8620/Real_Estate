@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcryptjs from "bcryptjs";
 import { User } from "../models/user.model.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
     const hashpassword = bcryptjs.hashSync(password, 10); //  hashsync use krna se await lagane ka koi jarurat nai hai kyunki ye synchronous function hai
@@ -13,8 +13,6 @@ export const signup = async (req, res) => {
       user: savedUser,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "username or email already exists", message: error });
+    next(error);
   }
 };
