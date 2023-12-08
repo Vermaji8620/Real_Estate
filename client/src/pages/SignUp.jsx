@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
@@ -20,8 +21,10 @@ const SignUp = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+      console.log(res);
       if (res.ok) {
         const responseData = await res.json();
+        navigate("/sign-in");
         console.log(responseData);
       } else {
         setError(error);
