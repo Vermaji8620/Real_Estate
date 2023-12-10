@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+// usedispatch ka matlb hota hai ki hm dukan me kch change krna chahte hai yaha se ..to usedispatch ka andar me function call kr denge
+// useselector k use krke hm jo v initialvalue define hai dukan k andar me usko bula skte hai....
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 const SignIn = () => {
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -15,7 +23,7 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      setLoading(true);
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -25,17 +33,14 @@ const SignIn = () => {
         const responseData = await res.json();
         navigate("/");
         console.log(responseData);
+        dispatch(signInSuccess(responseData));
       } else {
-        setError(error);
-        setLoading(false);
+        dispatch(signInFailure(null));
         document.querySelector(".form").reset();
         return;
       }
-      setLoading(false);
-      setError(null);
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(error));
     } finally {
       document.querySelector(".form").reset();
     }
