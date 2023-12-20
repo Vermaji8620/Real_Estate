@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
@@ -7,15 +8,22 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "../redux/user/userSlice";
 
 const Profile = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { currentUser, loading } = useSelector((state) => state.user);
   const fileRef = useRef(null);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [count, setCount] = useState(0);
   const [file, setFile] = useState(undefined);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setCount(count + 1);
@@ -53,15 +61,44 @@ const Profile = () => {
     );
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        return dispatch(updateUserFailure(data.message));
+      }
+      dispatch(updateUserSuccess(data.user));
+      navigate("/");
+    } catch (error) {
+      return dispatch(updateUserFailure(error.message));
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold my-7 border text-center border-red-400">
         Profile
       </h1>
-      <form className="flex flex-col border gap-4 border-green-600">
+      <form
+        className="flex flex-col border gap-4 border-green-600"
+        onSubmit={handleSubmit}
+      >
         <input
           type="file"
-          name=""
+          name="file"
           id="file"
           // hm chah rahe hai ki [input type:file] ka functionality image ka andar me aa jaye...matlab ki image ko jo select krne ka funcitonality iske andar me hota hai wo image ko click krne se hone lage...(useRef hook ka use krna hoga iske liye. jisko initialise krna hga ek instance banake jo pehle kr chuke hai)
           ref={fileRef}
@@ -99,26 +136,38 @@ const Profile = () => {
         <input
           type="text"
           name="username"
+          defaultValue={currentUser.username}
           id="username"
+          autoComplete="username"
           placeholder="username"
           className="border p-3 rounded-lg"
+          onChange={handleChange}
         />
         <input
           type="email"
+          defaultValue={currentUser.email}
           name="email"
           id="email"
+          autoComplete="email"
           placeholder="email"
           className="border p-3 rounded-lg"
+          onChange={handleChange}
         />
         <input
           type="password"
           name="password"
+          autoComplete="current-password"
           id="password"
           placeholder="password"
           className="border p-3 rounded-lg"
+          onChange={handleChange}
         />
-        <button className="text-white rounded-lg bg-slate-700 p-3 uppercase hover:opacity-95 disabled:opacity-80">
-          update
+        <button
+          // jb loading true ho to button disable ho jaye
+          disabled={loading}
+          className="text-white rounded-lg bg-slate-700 p-3 uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          {loading ? "Loading..." : "Update"}
         </button>
       </form>
       <div className="flex justify-between mt-5">
