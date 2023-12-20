@@ -56,7 +56,7 @@ export const google = async (req, res, next) => {
       const usercopy = userr.toObject();
       delete usercopy.password;
       res
-        .cookie("token", token, {
+        .cookie("access_token", token, {
           httpOnly: true,
         })
         .json(usercopy)
