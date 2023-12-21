@@ -51,11 +51,13 @@ const SignUp = () => {
           type="text"
           placeholder="enter the username"
           className=" p-3 rounded-lg"
+          autoComplete="username"
           id="username"
         />
         <input
           onChange={handleChange}
           type="email"
+          autoComplete="email"
           placeholder="enter the email"
           className=" p-3 rounded-lg"
           id="email"
@@ -63,6 +65,7 @@ const SignUp = () => {
         <input
           onChange={handleChange}
           type="password"
+          autoComplete="current-password"
           placeholder="enter the password"
           className=" p-3 rounded-lg"
           id="password"

@@ -12,6 +12,9 @@ import {
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -77,13 +80,32 @@ const Profile = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (!data.success) {
+      if (!data) {
         return dispatch(updateUserFailure(data.message));
       }
       dispatch(updateUserSuccess(data.user));
       navigate("/");
     } catch (error) {
       return dispatch(updateUserFailure(error.message));
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!data) return dispatch(deleteUserFailure(data.message));
+
+      dispatch(deleteUserSuccess());
+      // agar user delete ho jaye to logout apne aap ho jayega aur login page pe chala jayega
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+      console.log(error.message);
     }
   };
 
@@ -171,7 +193,12 @@ const Profile = () => {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span
+          className="text-red-700 cursor-pointer"
+          onClick={handleDeleteUser}
+        >
+          Delete Account
+        </span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
     </div>
