@@ -15,6 +15,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutUserStart,
+  signOutUserSuccess,
+  signOutUserFailure,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -24,13 +27,10 @@ const Profile = () => {
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const [count, setCount] = useState(0);
   const [file, setFile] = useState(undefined);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setCount(count + 1);
-    console.log(count);
     if (file) {
       handleFileUpload(file);
     }
@@ -106,6 +106,20 @@ const Profile = () => {
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
       console.log(error.message);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await fetch("/api/auth/signout", {
+        method: "GET",
+      });
+      const dataa = await res.json();
+      if (!dataa) return dispatch(signOutUserFailure("something went wrong"));
+      dispatch(signOutUserSuccess());
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
     }
   };
 
@@ -199,7 +213,9 @@ const Profile = () => {
         >
           Delete Account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span className="text-red-700 cursor-pointer" onClick={handleSignOut}>
+          Sign Out
+        </span>
       </div>
     </div>
   );

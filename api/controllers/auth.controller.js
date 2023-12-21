@@ -95,3 +95,12 @@ export const google = async (req, res, next) => {
     next(error);
   }
 };
+
+export const signout = (req, res, next) => {
+  // signout krne k liye cookie ko clear krna hoga
+  try {
+    res.clearCookie("access_token").json({ message: "signout successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
