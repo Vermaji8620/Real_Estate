@@ -6,7 +6,7 @@ import Profile from "./pages/Profile";
 import Header from "./components/Header";
 import SignUp from "./pages/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
-import Listing from "./pages/Listing";
+import Listing from "./pages/CreateListing";
 
 function App() {
   return (
