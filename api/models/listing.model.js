@@ -6,6 +6,7 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     description: {
       type: String,
       required: true,
@@ -15,6 +16,7 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     regularPrice: {
       type: Number,
       required: true,
@@ -60,6 +62,7 @@ const listingSchema = new mongoose.Schema(
         required: true,
       },
     ],
+
     userRef: {
       type: String,
       required: true,
@@ -70,5 +73,4 @@ const listingSchema = new mongoose.Schema(
   }
 );
 
-const Listing = mongoose.model("Listing", listingSchema);
-export default Listing;
+export const Listing = mongoose.model("Listing", listingSchema);
