@@ -57,6 +57,7 @@ export const deleteUser = async (req, res, next) => {
 };
 
 export const getUserListings = async (req, res, next) => {
+  // niche wala verification isliye kiya hai...taki koi dusra user kisi aur user k listings na dekh sake...koi dusra user ksii aur ka accunt ka listings dekh lega nahi to...
   if (req.user.id === req.params.id) {
     try {
       const listings = await Listing.find({

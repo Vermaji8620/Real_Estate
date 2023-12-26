@@ -27,7 +27,9 @@ const Profile = () => {
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [showListingsError, setShowListingsError] = useState(false);
   const [file, setFile] = useState(undefined);
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -120,6 +122,22 @@ const Profile = () => {
       dispatch(signOutUserSuccess());
     } catch (error) {
       dispatch(signOutUserFailure(error.message));
+    }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (!data) {
+        setShowListingsError(true);
+        return;
+      }
+      setUserListings(data);
+      console.log(data);
+    } catch (error) {
+      setShowListingsError(true);
+      console.log(error.message);
     }
   };
 
@@ -223,6 +241,49 @@ const Profile = () => {
           Sign Out
         </span>
       </div>
+      <button className="w-full" onClick={handleShowListings}>
+        <p className="text-red-700">
+          {showListingsError ? (
+            <div className="text-red-700 font-semibold">
+              Error Showing Listings
+            </div>
+          ) : (
+            <div className="text-green-700 font-semibold">Show Listings</div>
+          )}
+        </p>
+      </button>
+
+      {userListings && userListings.length > 0 ? (
+        <div className="border border-red-700 flex flex-col justify-center">
+          <h2 className="text-center font-bold text-2xl">Your Listings</h2>
+          {userListings.map((listing, index) => (
+            <div key={index} className="flex justify-between items-center mt-3">
+              <Link to={`/listing/${listing._id}`}>
+                <p>
+                  <img
+                    src={listing.imageUrls}
+                    className="h-16 w-16 object-contain"
+                    alt="this is one of the images"
+                  />
+                </p>
+              </Link>
+              {/* truncate ka matlab hai ki nam agar boht lamba raha to dotdotdot(...) kr dega */}
+              <Link to={`/listing/${listing._id}`}>
+                <p className="text-slate-700 font-semibold hover:underline truncate">
+                  {listing.name}
+                </p>
+              </Link>
+
+              <p className="flex flex-col justify-center">
+                <button className="text-red-700 uppercase">Delete</button>
+                <button className="text-green-700 uppercase">Edit</button>
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

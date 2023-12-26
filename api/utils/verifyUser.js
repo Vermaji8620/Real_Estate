@@ -1,4 +1,6 @@
 // yaha pe khali token ko verify krrhe hai..
+// iska matlb ki user logged in hai ya nhi...yaha pe user logged in hai toh next() call hoga
+// aur uska loggged in information req.user me store krke bhej de rha hai
 
 import jwt from "jsonwebtoken";
 import { errorHandler } from "./error.js";
