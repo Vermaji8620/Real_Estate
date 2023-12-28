@@ -92,7 +92,6 @@ const Listing = () => {
   };
 
   const handleRemoveImage = (index) => {
-    console.log("dfdsfsf");
     setFormData({
       ...formData,
       imageUrls: formData.imageUrls.filter((_, item) => item !== index),
@@ -147,7 +146,11 @@ const Listing = () => {
         }),
       });
       const data = await res.json();
-      if (!data) return setError(data.message);
+      if (!data) {
+        setError(data.message);
+        console.log(data.message);
+        return;
+      }
       console.log("data yeh hai", data);
       navigate(`/listing/${data._id}`);
     } catch (error) {
