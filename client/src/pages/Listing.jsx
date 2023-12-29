@@ -6,6 +6,7 @@ import { FaBed } from "react-icons/fa6";
 import { LiaBathSolid } from "react-icons/lia";
 import { FaParking } from "react-icons/fa";
 import { FaChair } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -14,9 +15,11 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import Contact from "../components/Contact";
 
 const Listing = () => {
-  // SwiperCore.use(Navigation);
+  const { currentUser } = useSelector((state) => state.user);
+  const [contact, setContact] = useState(false);
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -136,11 +139,19 @@ const Listing = () => {
               )}
             </div>
           </div>
-          <div>
-            <button className="bg-slate-700 w-full rounded-lg p-2 text-white">
-              Contact LandLord
+
+          {/* current user ka condition isilite rakhe hai isme taki samjh me aye ki user loggedin hai tabhi usko contact waala button dikhega....aur user ab khud ko hi thode na contact krega ..to  agr listing ka userRef curentUser ka id k NOT EQUAL HAI TO contact ka button dikhayenge */}
+          {currentUser && currentUser._id !== listing.userRef && !contact && (
+            <button
+              onClick={() => {
+                setContact(true);
+              }}
+              className="text-white rounded-md p-2 uppercase font-bold bg-slate-700 w-full "
+            >
+              Contact Landlord
             </button>
-          </div>
+          )}
+          {contact && <Contact listing={listing} />}
         </div>
       )}
     </div>

@@ -71,3 +71,15 @@ export const getUserListings = async (req, res, next) => {
     return next(errorHandler(401, "You can just only get your own listings"));
   }
 };
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return errorHandler(404, "user not found");
+    const userCopy = user.toObject();
+    delete userCopy.password;
+    res.status(200).json(userCopy);
+  } catch (error) {
+    next(error);
+  }
+};
