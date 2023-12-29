@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { errorHandler } from "../../../api/utils/error";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { FaBed } from "react-icons/fa6";
+import { LiaBathSolid } from "react-icons/lia";
+import { FaParking } from "react-icons/fa";
+import { FaChair } from "react-icons/fa";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -18,6 +22,7 @@ const Listing = () => {
   const [error, setError] = useState(false);
   const [listing, setListing] = useState(null);
   const listingId = params.listingId;
+  console.log(listingId);
   useEffect(() => {
     (async () => {
       try {
@@ -30,11 +35,11 @@ const Listing = () => {
           return;
         }
         setListing(data);
-        setLoading(false);
         console.log(listing);
+        setLoading(false);
       } catch (error) {
         console.log(error);
-        setLoading(false);
+        setLoading("yeh error a rha hai", false);
         setError(true);
         errorHandler(404, "could not fetch the data");
       }
@@ -42,39 +47,103 @@ const Listing = () => {
   }, []);
 
   return (
-    <main>
-      {loading && <p className="text-center mt-6">...Loading</p>}
-      {error && <p className="text-center mt-6">...Something went wrong</p>}
-      {/* {listing.name} */}
+    <div>
+      <main>
+        {loading && <p className="text-center mt-6">...Loading</p>}
+        {error && <p className="text-center mt-6">...Something went wrong</p>}
+        {/* {listing.name} */}
+        {listing && !loading && !error && (
+          <div>
+            <Swiper
+              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              spaceBetween={50}
+              slidesPerView={3}
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 2,
+                },
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 1,
+                },
+              }}
+              navigation
+              pagination={{ clickable: true }}
+              scrollbar={{ draggable: true }}
+              onSwiper={(swiper) => console.log(swiper)}
+              onSlideChange={() => console.log("slide change")}
+            >
+              {listing.imageUrls.map((image, index) => (
+                <div key={image ? image._id : index}>
+                  <SwiperSlide key={index}>
+                    <img
+                      src={image}
+                      alt="this is the image"
+                      style={{
+                        objectFit: "cover",
+                      }}
+                    />
+                  </SwiperSlide>
+                </div>
+              ))}
+            </Swiper>
+          </div>
+        )}
+      </main>
       {listing && !loading && !error && (
-        <div>
-          <Swiper
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            spaceBetween={50}
-            slidesPerView={3}
-            navigation
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log("slide change")}
-          >
-            {listing.imageUrls.map((image, index) => (
-              <div key={image ? image._id : index}>
-                <SwiperSlide key={index}>
-                  <img
-                    src={image}
-                    alt="this is the image"
-                    style={{
-                      objectFit: "contain",
-                    }}
-                  />
-                </SwiperSlide>
-              </div>
-            ))}
-          </Swiper>
+        <div className=" flex flex-col gap-6 -red-900 mt-10 w-[80%] mx-auto">
+          <div className=" flex sm:w-[40%] font-bold justify-between">
+            <div className="uppercase">{listing.name}</div>
+            <div>${listing.regularPrice}/month</div>
+          </div>
+          <div className="flex gap-6">
+            <div>
+              <button className="bg-red-700 text-white rounded-md p-2">
+                For {listing.type}
+                {console.log(listing)}
+              </button>
+            </div>
+            <div>
+              <button className="bg-green-700 text-white rounded-md p-2">
+                ${+listing.regularPrice - +listing.discountedPrice}
+              </button>
+            </div>
+          </div>
+          <div>
+            <span className="font-bold">Description :-- </span>
+            {listing.description}
+          </div>
+          <div className="flex gap-5 flex-wrap">
+            <div className="flex">
+              <FaBed />
+              {listing.bedrooms} bed
+            </div>
+            <div className="flex">
+              <LiaBathSolid />
+              {listing.bathrooms} bath
+            </div>
+            <div className="flex">
+              <FaParking />
+              {listing.parking ? <div>Parking</div> : <div>No Parking</div>}
+            </div>
+            <div className="flex">
+              <FaChair />
+              {listing.furnished ? (
+                <div>Furnished</div>
+              ) : (
+                <div>Not Furnished</div>
+              )}
+            </div>
+          </div>
+          <div>
+            <button className="bg-slate-700 w-full rounded-lg p-2 text-white">
+              Contact LandLord
+            </button>
+          </div>
         </div>
       )}
-    </main>
+    </div>
   );
 };
 
