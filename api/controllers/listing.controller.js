@@ -57,6 +57,8 @@ export const getListing = async (req, res, next) => {
   }
 };
 
+// search karne ka logic hai ki agar koi user search karega to uske search ke hisab se usko listing dikhayi degi
+// Listing ka andar me jitna v items hai jo Schema k time pe define kiye the, unko hi hum query mei use kr skte hai
 export const getListings = async (req, res, next) => {
   try {
     let limit = parseInt(req.query.limit) || 10;
@@ -80,7 +82,6 @@ export const getListings = async (req, res, next) => {
       parking = { $in: [false, true] };
     }
 
-
     let type = req.query.type;
 
     if (type == undefined || type == "all") {
@@ -94,6 +95,8 @@ export const getListings = async (req, res, next) => {
     let order = req.query.order || "desc";
 
     let listings = await Listing.find({
+      // searchTerm jo hai wo name hai jo query mei aya hai aur i matlab case INSENSITIVE hai, searchTerm se ham listing ka name me search kr skte hai...
+      // aur regex inbuilt function hai jo ki string mei search krta hai---
       name: { $regex: searchTerm, $options: "i" },
       offer,
       furnished,

@@ -1,9 +1,29 @@
 import { FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // niche wala code sab se url ka andar search apne ap add ho jayega---
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
+  // ab jo v term url pe hit marenge search krne ke liye wo yaha, input:search pe v aana chahieye,to iske liye useffect ka use krenge
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) setSearchTerm(searchTermFromUrl);
+  }, [location.search]);
+
   return (
     <header className="bg-slate-200 shadow-md">
       <div className="flex justify-between p-3 items-center max-w-6xl mx-auto">
@@ -13,15 +33,22 @@ const Header = () => {
             <span className="text-slate-700">Estate</span>
           </h1>
         </Link>
-        <form className="bg-slate-100 p-3 flex items-center rounded-lg ">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-slate-100 p-3 flex items-center rounded-lg "
+        >
           <input
             type="text"
             className="focus:outline-none bg-transparent w-24"
             name=""
             id=""
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="search..."
           />
-          <FaSearch className="text-slate-500" />
+          <button>
+            <FaSearch className="text-slate-500" />
+          </button>
         </form>
         <ul className="flex gap-4">
           <Link to="/">
