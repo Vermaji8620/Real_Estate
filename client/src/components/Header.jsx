@@ -8,6 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
+  // jab submit hoga tab niche wala function chalega
   const handleSubmit = async (e) => {
     e.preventDefault();
     // niche wala code sab se url ka andar search apne ap add ho jayega---
@@ -18,10 +19,12 @@ const Header = () => {
   };
 
   // ab jo v term url pe hit marenge search krne ke liye wo yaha, input:search pe v aana chahieye,to iske liye useffect ka use krenge
+  // url me change hone se useffect chalega
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
     if (searchTermFromUrl) setSearchTerm(searchTermFromUrl);
+    // yaha pe location.search ka use krke url ka search term nikal rhe hai...yeh as a dependecy use kr rhe hai ..
   }, [location.search]);
 
   return (
