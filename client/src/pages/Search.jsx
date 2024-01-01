@@ -1,58 +1,53 @@
 const Search = () => {
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-7 border-b-2 md:border-b-2 md:min-h-screen">
+      <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
         <form className="flex flex-col gap-8">
-          <div className="flex items-center gap-2 ">
-            <label className="whitespace-nowrap">Search Term</label>
+          <div className="flex items-center gap-2">
+            <label className="whitespace-nowrap">Search Term:</label>
             <input
               type="text"
-              id="searchTerm"
-              placeholder="Search..."
-              className="rounded-lg p-3 w-full"
+              name=""
+              id="searchTerm "
+              placeholder="Search"
+              className="border w-full  rounded-lg p-3 w-4"
             />
           </div>
-          <div className="flex gap-2">
-            <label>Type:</label>
+          <div className="flex gap-2 flex-wrap items-center">
+            <label>Type</label>
             <div className="flex gap-2">
-              {/* id all hai kyunki rent and sale dono consider krnege yaha pe */}
-              <input type="checkbox" id="all" className="w-5" />
-              <span>Rent and Sale</span>
+              <input type="checkbox" name="" className="w-5" id="all" />
+              <span>Rent & sale</span>
             </div>
             <div className="flex gap-2">
-              {/* id all hai kyunki rent and sale dono consider krnege yaha pe */}
-              <input type="checkbox" id="rent" className="w-5" />
-              <span>Rent </span>
+              <input type="checkbox" name="" className="w-5" id="rent" />
+              <span>Rent</span>
             </div>
             <div className="flex gap-2">
-              {/* id all hai kyunki rent and sale dono consider krnege yaha pe */}
-              <input type="checkbox" id="sale" className="w-5" />
-              <span> Sale</span>
+              <input type="checkbox" name="" className="w-5" id="sale" />
+              <span> sale</span>
             </div>
             <div className="flex gap-2">
-              {/* id all hai kyunki rent and sale dono consider krnege yaha pe */}
-              <input type="checkbox" id="offer" className="w-5" />
+              <input type="checkbox" name="" className="w-5" id="offer" />
               <span>Offer</span>
             </div>
           </div>
-          <div className="flex gap-2">
-            <label>Amenties:</label>
+          <div className="flex gap-2 flex-wrap items-center">
+            <label>Amenities</label>
             <div className="flex gap-2">
-              {/* id all hai kyunki rent and sale dono consider krnege yaha pe */}
-              <input type="checkbox" id="parking" className="w-5" />
+              <input type="checkbox" name="" className="w-5" id="parking" />
               <span>Parking</span>
             </div>
             <div className="flex gap-2">
-              {/* id all hai kyunki rent and sale dono consider krnege yaha pe */}
-              <input type="checkbox" id="furnished" className="w-5" />
-              <span>Furnished </span>
+              <input type="checkbox" name="" className="w-5" id="furnished" />
+              <span>furnished</span>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <label>Sort: </label>
-            <select name="" id="sort_order" className="border rounded-lg p-2">
-              <option value="">Price High to low</option>
-              <option value="">Price Low to High</option>
+          <div className="flex items-center gap-2">
+            <label htmlFor="">Sort:</label>
+            <select name="" id="sort_order" className="border rounded-lg p-3">
+              <option value="">Price High To Low</option>
+              <option value="">Price Low To High</option>
               <option value="">Latest</option>
               <option value="">Oldest</option>
             </select>
@@ -63,8 +58,8 @@ const Search = () => {
         </form>
       </div>
       <div className="">
-        <h1 className="text-3xl font-semibold p-3 text-slate-700 border-b-2">
-          Listing Results
+        <h1 className="text-3xl font-semibold border-b-4 p-4 text-slate-700 mt-5">
+          Listing Results:
         </h1>
       </div>
     </div>
