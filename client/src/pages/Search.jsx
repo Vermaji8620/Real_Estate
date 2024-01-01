@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
+  const navigate = useNavigate();
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     type: "all",
@@ -10,8 +12,10 @@ const Search = () => {
     sort: "created_at",
     order: "desc",
   });
+  const [listings, setListings] = useState([]);
 
-  console.log(sidebarData);
+  console.log("yeh hai sidebar ka data---> ", sidebarData);
+  console.log("yeh hai listings ka data---> ", listings);
 
   const handleChange = (e) => {
     if (
@@ -55,10 +59,63 @@ const Search = () => {
     }
   };
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    const typeFromUrl = urlParams.get("type");
+    const parkingFromUrl = urlParams.get("parking");
+    const furnishedFromUrl = urlParams.get("furnished");
+    const offerFromUrl = urlParams.get("offer");
+    const sortFromUrl = urlParams.get("sort");
+    const orderFromUrl = urlParams.get("order");
+
+    setSidebarData({
+      ...sidebarData,
+      searchTerm: searchTermFromUrl || "",
+      type: typeFromUrl || "all",
+      parking:
+        parkingFromUrl === true || parkingFromUrl === "true" ? true : false, // yaha pe boolean aur string dono ke liye check krna padega...sirf boolean k liye chceck kare the toh error aa rha tha ...  upar me jo url se .get krke data nikal rahe hai, uska output k type ko jab console.log krrhe hai to string a raha hai
+      // aur ye sb hm parking, furnished, aur offer teeno ke liye krrhe hai.........teeno k liye krna higa
+      furnished:
+        furnishedFromUrl === true || furnishedFromUrl === "true" ? true : false,
+      offer: offerFromUrl === true || offerFromUrl === "true" ? true : false,
+      sort: sortFromUrl || "created_at",
+      order: orderFromUrl || "desc",
+    });
+  }, [window.location.search]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // yaha pe jb bhi form submit hoga toh yeh function chalega jo ki form ka jo v data hai wo url pe update krega aur phir useeffect chalega
+    // pehle wo information chahiye jo ki already url pe hai
+    // window.location.search inbuilt function hai jo ki url se query string nikal leta hai
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("searchTerm", sidebarData.searchTerm);
+    urlParams.set("type", sidebarData.type);
+    urlParams.set("parking", sidebarData.parking);
+    urlParams.set("furnished", sidebarData.furnished);
+    urlParams.set("offer", sidebarData.offer);
+    urlParams.set("sort", sidebarData.sort);
+    urlParams.set("order", sidebarData.order);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+    (async () => {
+      const res = await fetch(`/api/listing/get?${searchQuery}`);
+      const data = await res.json();
+      try {
+        if (data) {
+          setListings(data);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  };
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
-        <form className="flex flex-col gap-8">
+        <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
           <div className="flex items-center gap-2">
             <label className="whitespace-nowrap">Search Term:</label>
             <input
