@@ -5,6 +5,11 @@ import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import listingRouter from "./routes/listing.route.js";
 import cookieParser from "cookie-parser";
+// path module inbuilt hota hai jo ki dynamic path provide krta hai deployment k time
+import path from "path";
+
+// dynamic folder banana pdega ---
+const __dirname = path.resolve();
 
 dotenv.config();
 
@@ -15,6 +20,14 @@ app.use(express.json()); //  req. k body se directly data nai fetch kr skte to i
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
+
+//  for deployment
+app.use(express.static(path.join(__dirname, `/client/dist`)));
+
+// any address except the above three will be handled by this
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
 
 //  middleware for handling the errors
 app.use((err, req, res, next) => {
