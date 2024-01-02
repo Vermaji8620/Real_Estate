@@ -47,12 +47,13 @@ const Home = () => {
         console.log("offer ka error a rha hai", error);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.location.reload]);
 
   return (
     <div>
       {/* top */}
-      <div className=" border border-red-600 flex flex-col gap-6 py-28 max-w-6xl mx-auto px-3">
+      <div className="flex flex-col gap-6 py-28 max-w-6xl mx-auto px-3">
         <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl ">
           Find your next <span className="text-slate-500">Perfect</span> <br />
           place with ease

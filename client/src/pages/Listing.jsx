@@ -25,7 +25,6 @@ const Listing = () => {
   const [error, setError] = useState(false);
   const [listing, setListing] = useState(null);
   const listingId = params.listingId;
-  console.log(listingId);
   useEffect(() => {
     (async () => {
       try {
@@ -38,15 +37,14 @@ const Listing = () => {
           return;
         }
         setListing(data);
-        console.log(listing);
         setLoading(false);
       } catch (error) {
-        console.log(error);
         setLoading("yeh error a rha hai", false);
         setError(true);
         errorHandler(404, "could not fetch the data");
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -74,11 +72,9 @@ const Listing = () => {
               navigation
               pagination={{ clickable: true }}
               scrollbar={{ draggable: true }}
-              onSwiper={(swiper) => console.log(swiper)}
-              onSlideChange={() => console.log("slide change")}
             >
               {listing.imageUrls.map((image, index) => (
-                <div key={image ? image._id : index}>
+                <div key={index}>
                   <SwiperSlide key={index}>
                     <img
                       src={image}
@@ -104,7 +100,6 @@ const Listing = () => {
             <div>
               <button className="bg-red-700 text-white rounded-md p-2">
                 For {listing.type}
-                {console.log(listing)}
               </button>
             </div>
             <div>

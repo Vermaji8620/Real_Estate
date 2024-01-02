@@ -27,6 +27,7 @@ const UpdateListing = () => {
       );
     })();
     // niche me third brackaet k andar me kch nai likhne ka matlb hai ki sirf ek baar hi useffect chalega...page loading k time pe-----
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { currentUser } = useSelector((state) => state.user);
   const [files, setFiles] = useState([]);

@@ -83,6 +83,7 @@ const Search = () => {
       sort: sortFromUrl || "created_at",
       order: orderFromUrl || "desc",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.location.search]);
 
   const handleSubmit = (e) => {

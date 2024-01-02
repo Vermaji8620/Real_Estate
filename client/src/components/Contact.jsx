@@ -17,6 +17,7 @@ const Contact = ({ listing }) => {
         console.log(error);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [message, setMessage] = useState("");

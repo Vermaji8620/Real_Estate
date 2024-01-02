@@ -25,6 +25,7 @@ const Header = () => {
     const searchTermFromUrl = urlParams.get("searchTerm");
     if (searchTermFromUrl) setSearchTerm(searchTermFromUrl);
     // yaha pe location.search ka use krke url ka search term nikal rhe hai...yeh as a dependecy use kr rhe hai ..
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
   return (
